@@ -4,8 +4,8 @@ class Background extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', 'assets/tempBack.png');
-        this.load.image('player', 'assets/tempWeed.png');
+        this.load.image("background", "assets/tempBack.png");
+        this.load.image("player", "assets/tempWeed.png");
     }
 
     create() {
