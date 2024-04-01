@@ -8,6 +8,7 @@ var config = {
             debug: false
         }
     },
+    pixelArt: true,
     scene: [Background, PlayerMovement]
 }
 
