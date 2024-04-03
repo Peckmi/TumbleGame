@@ -32,6 +32,7 @@ export class Preloader extends Scene
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
+        this.load.image('shadow', 'shadow.png');
         this.load.image('tumbleweed', 'tempWeed.png');
         this.load.image('empty', 'empty.png');
     }
