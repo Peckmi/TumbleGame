@@ -1,4 +1,4 @@
-import { Scene, Math } from 'phaser';
+import { Scene } from 'phaser';
 import { GLOBALS } from '../main';
 
 let platforms
@@ -32,9 +32,9 @@ export class Game extends Scene
     }
 
     update() {
-        // the player floats 200 pixels above the platform and I have no idea why. set the ground's alpha to 1 to see this.
-        // this needs to be fixed so the player can't jump twice just by clicking really fast.
-        if (Math.Distance.BetweenPoints(player.body.position, ground.body.position) < 205) {
+        const DISTANCE_FROM_GROUND = (Math.abs(ground.body.position.y) - Math.abs(player.body.position.y)) - (player.displayWidth);
+
+        if (DISTANCE_FROM_GROUND === 0) {
             isPlayerGrounded = true;
         } else {
             isPlayerGrounded = false;
