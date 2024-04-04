@@ -2,6 +2,7 @@ import { Boot } from './scenes/Boot';
 import { Game } from './scenes/Game';
 import { MainMenu } from './scenes/MainMenu';
 import { Preloader } from './scenes/Preloader';
+import { GameOver } from './scenes/GameOver';
 
 export const GLOBALS = {
     VIEWPORT_WIDTH: 1024,
@@ -31,7 +32,8 @@ const config = {
         Boot,
         Preloader,
         MainMenu,
-        Game
+        Game,
+        GameOver
     ]
 };
 
