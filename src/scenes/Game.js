@@ -9,6 +9,8 @@ let shadow;
 let background1;
 let background2;
 
+let playerHealth;
+
 export class Game extends Scene
 {
     constructor ()
@@ -18,6 +20,87 @@ export class Game extends Scene
 
     create ()
     {
+        playerHealth = {
+            health5: this.add.image(200, 600, '5-heart').setAlpha(0).setScale(1.5),
+            health4: this.add.image(200, 600, '4-heart').setAlpha(0).setScale(1.5),
+            health3: this.add.image(200, 600, '3-heart').setAlpha(1).setScale(1.5),
+            health2: this.add.image(200, 600, '2-heart').setAlpha(0).setScale(1.5),
+            health1: this.add.image(200, 600, '1-heart').setAlpha(0).setScale(1.5),
+            alignAll: () => {
+                playerHealth.health5.y = player.body.position.y - 20;
+                playerHealth.health4.y = player.body.position.y - 20;
+                playerHealth.health3.y = player.body.position.y - 20;
+                playerHealth.health2.y = player.body.position.y - 20;
+                playerHealth.health1.y = player.body.position.y - 20;
+            },
+            currentHealth: 3,
+            hurt: () => {
+                playerHealth.setHealth(playerHealth.currentHealth - 1);
+            },
+            heal: () => {
+                if ((playerHealth.currentHealth + 1) <  6) {
+                    playerHealth.setHealth(playerHealth.currentHealth + 1);
+                }
+            },
+            setHealth: (healthNum) => {
+                playerHealth.currentHealth = healthNum;
+                let newScale;
+                switch (healthNum) {
+                    case 5:
+                        newScale = 0.4;
+                        playerHealth.health5.setAlpha(1);
+                        playerHealth.health4.setAlpha(0);
+                        playerHealth.health3.setAlpha(0);
+                        playerHealth.health2.setAlpha(0);
+                        playerHealth.health1.setAlpha(0);
+                        player.setY(player.y - (player.width * newScale / 2));
+                        player.setScale(newScale).refreshBody();
+                        break;
+                    case 4:
+                        newScale = 0.35;
+                        playerHealth.health5.setAlpha(0);
+                        playerHealth.health4.setAlpha(1);
+                        playerHealth.health3.setAlpha(0);
+                        playerHealth.health2.setAlpha(0);
+                        playerHealth.health1.setAlpha(0);
+                        player.setY(player.y - (player.width * newScale / 2));
+                        player.setScale(newScale).refreshBody();
+                        break;
+                    case 3:
+                        newScale = 0.3;
+                        playerHealth.health5.setAlpha(0);
+                        playerHealth.health4.setAlpha(0);
+                        playerHealth.health3.setAlpha(1);
+                        playerHealth.health2.setAlpha(0);
+                        playerHealth.health1.setAlpha(0);
+                        player.setY(player.y - (player.width * newScale / 2));
+                        player.setScale(newScale).refreshBody();
+                        break;
+                    case 2:
+                        newScale = 0.25;
+                        playerHealth.health4.setAlpha(0);
+                        playerHealth.health5.setAlpha(0);
+                        playerHealth.health3.setAlpha(0);
+                        playerHealth.health2.setAlpha(1);
+                        playerHealth.health1.setAlpha(0);
+                        player.setY(player.y - (player.width * newScale / 2));
+                        player.setScale(newScale).refreshBody();
+                        break;
+                    case 1:
+                        newScale = 0.2;
+                        playerHealth.health5.setAlpha(0);
+                        playerHealth.health4.setAlpha(0);
+                        playerHealth.health3.setAlpha(0);
+                        playerHealth.health2.setAlpha(0);
+                        playerHealth.health1.setAlpha(1);
+                        player.setScale(newScale).refreshBody();
+                        break;
+                    case 0:
+                        this.scene.start('GameOver');
+                }
+            }
+        };
+
         background1 = this.add.image(
             GLOBALS.VIEWPORT_WIDTH / 2,
             GLOBALS.VIEWPORT_HEIGHT / 2,
@@ -55,7 +138,9 @@ export class Game extends Scene
         this.movingBackground(background1);
         this.movingBackground(background2);
 
-        shadow.setScale(0.3 + (DISTANCE_FROM_GROUND / 500))
+        shadow.setScale(0.3 + (DISTANCE_FROM_GROUND / 2800));
+        shadow.setAlpha(0.1 - (DISTANCE_FROM_GROUND / 4000));
+        playerHealth.alignAll();
     }
 
     spin(object, amount) {
