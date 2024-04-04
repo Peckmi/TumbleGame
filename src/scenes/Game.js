@@ -8,6 +8,8 @@ let isPlayerGrounded;
 let shadow;
 let background1;
 let background2;
+let sandTile1;
+let sandTileTop1;
 
 let playerHealth;
 
@@ -111,6 +113,24 @@ export class Game extends Scene
             GLOBALS.VIEWPORT_HEIGHT / 2,
             'background'
         ).setDisplaySize(this.sys.canvas.width + 8, this.sys.canvas.height).setDepth(-2).setFlipX(true);
+        
+        var tileHeight = 32
+        var tileScale = 4
+        var tileNum = 1.5
+        sandTile1 = this.add.tileSprite(
+            0,
+            GLOBALS.VIEWPORT_HEIGHT,
+            GLOBALS.VIEWPORT_WIDTH,
+            tileHeight * tileNum,
+            'sandTile'
+        ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
+        sandTileTop1 = this.add.tileSprite(
+            0,
+            GLOBALS.VIEWPORT_HEIGHT - (tileHeight * tileScale * tileNum),
+            GLOBALS.VIEWPORT_WIDTH,
+            tileHeight,
+            'sandTileTop'
+        ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
 
         player = this.physics.add.sprite(200, 500, 'tumbleweed').setScale(4).refreshBody();
 
@@ -135,8 +155,10 @@ export class Game extends Scene
 
         this.playerController();
         this.spin(player, 0.05);
-        this.movingBackground(background1);
-        this.movingBackground(background2);
+        this.movingBackground(background1, 3);
+        this.movingBackground(background2, 3);
+        this.movingBackground(sandTile1, 4);
+        this.movingBackground(sandTileTop1, 4);
 
         shadow.setScale(0.3 + (DISTANCE_FROM_GROUND / 2800));
         shadow.setAlpha(0.1 - (DISTANCE_FROM_GROUND / 4000));
@@ -147,9 +169,9 @@ export class Game extends Scene
         object.setRotation(object.rotation + amount);
     }
 
-    movingBackground(background) {
+    movingBackground(background, speed) {
         if (background.x > GLOBALS.VIEWPORT_WIDTH / -2) {
-            background.setX(background.x - 5);
+            background.setX(background.x - speed);
         } else {
             background.setX(GLOBALS.VIEWPORT_WIDTH * (3/2));
         }
