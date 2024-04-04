@@ -40,6 +40,8 @@ export class Preloader extends Scene
 
         this.load.image('shadow', 'shadow.png');
         this.load.image('tumbleweed', 'tumbleWeed.png');
+        this.load.image('sandTile', 'sand-32.png');
+        this.load.image('sandTileTop', 'sandTop-32.png');
         this.load.image('empty', 'empty.png');
     }
 
