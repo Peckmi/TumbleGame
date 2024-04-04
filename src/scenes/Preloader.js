@@ -33,7 +33,7 @@ export class Preloader extends Scene
         this.load.setPath('assets');
 
         this.load.image('shadow', 'shadow.png');
-        this.load.image('tumbleweed', 'tempWeed.png');
+        this.load.image('tumbleweed', 'tumbleWeed.png');
         this.load.image('empty', 'empty.png');
     }
 

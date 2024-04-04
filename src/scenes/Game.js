@@ -29,7 +29,7 @@ export class Game extends Scene
             'background'
         ).setDisplaySize(this.sys.canvas.width + 8, this.sys.canvas.height).setDepth(-2).setFlipX(true);
 
-        player = this.physics.add.sprite(200, 500, 'tumbleweed').setScale(0.3).refreshBody();
+        player = this.physics.add.sprite(200, 500, 'tumbleweed').setScale(4).refreshBody();
 
         shadow = this.add.image(200, 650, 'shadow').setAlpha(0.1).setDepth(-1).setScale(0.3);
         
@@ -51,7 +51,7 @@ export class Game extends Scene
         }
 
         this.playerController();
-        this.spin(player, 0.15);
+        this.spin(player, 0.05);
         this.movingBackground(background1);
         this.movingBackground(background2);
 
