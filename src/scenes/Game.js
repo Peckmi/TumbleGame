@@ -21,9 +21,9 @@ export class Game extends Scene
     create ()
     {
         playerHealth = {
-            health5: this.add.image(200, 600, '5-heart').setAlpha(1).setScale(1.5),
+            health5: this.add.image(200, 600, '5-heart').setAlpha(0).setScale(1.5),
             health4: this.add.image(200, 600, '4-heart').setAlpha(0).setScale(1.5),
-            health3: this.add.image(200, 600, '3-heart').setAlpha(0).setScale(1.5),
+            health3: this.add.image(200, 600, '3-heart').setAlpha(1).setScale(1.5),
             health2: this.add.image(200, 600, '2-heart').setAlpha(0).setScale(1.5),
             health1: this.add.image(200, 600, '1-heart').setAlpha(0).setScale(1.5),
             alignAll: () => {
@@ -33,7 +33,7 @@ export class Game extends Scene
                 playerHealth.health2.y = player.body.position.y - 20;
                 playerHealth.health1.y = player.body.position.y - 20;
             },
-            currentHealth: 5,
+            currentHealth: 3,
             hurt: () => {
                 playerHealth.setHealth(playerHealth.currentHealth - 1);
             },
@@ -112,7 +112,7 @@ export class Game extends Scene
             'background'
         ).setDisplaySize(this.sys.canvas.width + 8, this.sys.canvas.height).setDepth(-2).setFlipX(true);
 
-        player = this.physics.add.sprite(200, 500, 'tumbleweed').setScale(0.4).refreshBody();
+        player = this.physics.add.sprite(200, 500, 'tumbleweed').setScale(0.3).refreshBody();
 
         shadow = this.add.image(200, 650, 'shadow').setAlpha(0.1).setDepth(-1).setScale(0.3);
         
