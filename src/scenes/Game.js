@@ -10,6 +10,9 @@ let background1;
 let background2;
 let sandTile1;
 let sandTileTop1;
+let dunesTile1;
+let dunesTile2;
+let dunesTile3;
 
 let playerHealth;
 
@@ -114,6 +117,33 @@ export class Game extends Scene
             'background'
         ).setDisplaySize(this.sys.canvas.width + 8, this.sys.canvas.height).setDepth(-2).setFlipX(true);
         
+        //dunes vars
+        var tileHeight = 32
+        var tileScale = 4
+        var tileNum = 1.75
+        dunesTile3 = this.add.tileSprite(
+            0,
+            GLOBALS.VIEWPORT_HEIGHT - (tileHeight * tileScale * tileNum),
+            GLOBALS.VIEWPORT_WIDTH ,
+            tileHeight,
+            'dunesTileTop'
+        ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
+        dunesTile2 = this.add.tileSprite(
+            0,
+            GLOBALS.VIEWPORT_HEIGHT - (tileHeight * tileScale * tileNum),
+            GLOBALS.VIEWPORT_WIDTH ,
+            tileHeight,
+            'dunesTileMid'
+        ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
+        dunesTile1 = this.add.tileSprite(
+            0,
+            GLOBALS.VIEWPORT_HEIGHT - (tileHeight * tileScale * tileNum),
+            GLOBALS.VIEWPORT_WIDTH,
+            tileHeight,
+            'dunesTileBottom'
+        ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
+
+        //sand vars
         var tileHeight = 32
         var tileScale = 4
         var tileNum = 1.5
@@ -124,6 +154,7 @@ export class Game extends Scene
             tileHeight * tileNum,
             'sandTile'
         ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
+
         sandTileTop1 = this.add.tileSprite(
             0,
             GLOBALS.VIEWPORT_HEIGHT - (tileHeight * tileScale * tileNum),
@@ -131,6 +162,7 @@ export class Game extends Scene
             tileHeight,
             'sandTileTop'
         ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
+
 
         player = this.physics.add.sprite(200, 500, 'tumbleweed').setScale(4).refreshBody();
 
@@ -155,10 +187,13 @@ export class Game extends Scene
 
         this.playerController();
         this.spin(player, 0.05);
-        this.movingBackground(background1, 3);
-        this.movingBackground(background2, 3);
+        this.movingBackground(background1, .1);
+        this.movingBackground(background2, .1);
         this.movingBackground(sandTile1, 4);
         this.movingBackground(sandTileTop1, 4);
+        this.movingBackground(dunesTile1, 1);
+        this.movingBackground(dunesTile2, .5);
+        this.movingBackground(dunesTile3, .2);
 
         shadow.setScale(0.3 + (DISTANCE_FROM_GROUND / 2800));
         shadow.setAlpha(0.1 - (DISTANCE_FROM_GROUND / 4000));
