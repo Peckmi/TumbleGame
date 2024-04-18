@@ -13,6 +13,14 @@ let sandTileTop1;
 let dunesTile1;
 let dunesTile2;
 let dunesTile3;
+let clouds1a;
+let clouds1b;
+let clouds2a;
+let clouds2b;
+let clouds3a;
+let clouds3b;
+let clouds4a;
+let clouds4b;
 
 let playerHealth;
 
@@ -105,7 +113,8 @@ export class Game extends Scene
                 }
             }
         };
-
+        //background
+        
         background1 = this.add.image(
             GLOBALS.VIEWPORT_WIDTH / 2,
             GLOBALS.VIEWPORT_HEIGHT / 2,
@@ -116,8 +125,55 @@ export class Game extends Scene
             GLOBALS.VIEWPORT_HEIGHT / 2,
             'background'
         ).setDisplaySize(this.sys.canvas.width + 8, this.sys.canvas.height).setDepth(-2).setFlipX(true);
-        
-        //dunes vars
+
+        //clouds
+        var tileScale = 4
+
+        clouds4a = this.add.image(
+            GLOBALS.VIEWPORT_WIDTH / 2,
+            GLOBALS.VIEWPORT_HEIGHT / 1.9,
+            'clouds4'
+        ).setDepth(-2).setScale(tileScale)
+        clouds4b = this.add.image(
+            GLOBALS.VIEWPORT_WIDTH * (3/2),
+            GLOBALS.VIEWPORT_HEIGHT / 1.9,
+            'clouds4'
+        ).setDepth(-2).setScale(tileScale)
+
+        clouds3a = this.add.image(
+            GLOBALS.VIEWPORT_WIDTH / 2,
+            GLOBALS.VIEWPORT_HEIGHT / 2.4,
+            'clouds3'
+        ).setDepth(-2).setScale(tileScale)
+        clouds3b = this.add.image(
+            GLOBALS.VIEWPORT_WIDTH * (3/2),
+            GLOBALS.VIEWPORT_HEIGHT / 2.4,
+            'clouds3'
+        ).setDepth(-2).setScale(tileScale)
+
+        clouds2a = this.add.image(
+            GLOBALS.VIEWPORT_WIDTH / 2,
+            GLOBALS.VIEWPORT_HEIGHT / 3.5,
+            'clouds2'
+        ).setDepth(-2).setScale(tileScale)
+        clouds2b = this.add.image(
+            GLOBALS.VIEWPORT_WIDTH * (3/2),
+            GLOBALS.VIEWPORT_HEIGHT / 3.5,
+            'clouds2'
+        ).setDepth(-2).setScale(tileScale)
+
+        clouds1a = this.add.image(
+            GLOBALS.VIEWPORT_WIDTH / 2,
+            GLOBALS.VIEWPORT_HEIGHT / 8,
+            'clouds1'
+        ).setDepth(-2).setScale(tileScale)
+        clouds1b = this.add.image(
+            GLOBALS.VIEWPORT_WIDTH * (3/2),
+            GLOBALS.VIEWPORT_HEIGHT / 8,
+            'clouds1'
+        ).setDepth(-2).setScale(tileScale)
+
+        //dunes 
         var tileHeight = 32
         var tileScale = 4
         var tileNum = 1.75
@@ -143,7 +199,7 @@ export class Game extends Scene
             'dunesTileBottom'
         ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
 
-        //sand vars
+        //sand floor
         var tileHeight = 32
         var tileScale = 4
         var tileNum = 1.5
@@ -187,8 +243,12 @@ export class Game extends Scene
 
         this.playerController();
         this.spin(player, 0.05);
-        this.movingBackground(background1, .1);
-        this.movingBackground(background2, .1);
+
+        this.movingBackground(background1, .1); this.movingBackground(background2, .1);
+        this.movingBackground(clouds1a, 1);     this.movingBackground(clouds1b, 1);
+        this.movingBackground(clouds2a, .5);    this.movingBackground(clouds2b, .5);
+        this.movingBackground(clouds3a, .2);    this.movingBackground(clouds3b, .2);
+        this.movingBackground(clouds4a, .1);    this.movingBackground(clouds4b, .1);
         this.movingBackground(sandTile1, 4);
         this.movingBackground(sandTileTop1, 4);
         this.movingBackground(dunesTile1, 1);
