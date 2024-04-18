@@ -40,12 +40,20 @@ export class Preloader extends Scene
 
         this.load.image('shadow', 'shadow.png');
         this.load.image('tumbleweed', 'tumbleWeed.png');
+        this.load.image('fence', 'fence.png');
+        this.load.image('deadBush','deadBush.png');
+        this.load.image('cactus1', 'cactus.png')
         this.load.image('sandTile', 'sand-32.png');
         this.load.image('sandTileTop', 'sandTop-32-2.png');
         this.load.image('dunesTile', 'dunes-full.png');
         this.load.image('dunesTileTop', 'dunes-top.png');
         this.load.image('dunesTileMid', 'dunes-mid.png');
         this.load.image('dunesTileBottom', 'dunes-bottom.png');
+        this.load.image('clouds1','clouds-1.png');
+        this.load.image('clouds2','clouds-2.png');
+        this.load.image('clouds3','clouds-3.png');
+        this.load.image('clouds4','clouds-4.png');
+
         this.load.image('empty', 'empty.png');
     }
 
