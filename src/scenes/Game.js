@@ -24,15 +24,15 @@ let clouds4b;
 
 let playerHealth;
 
-export class Game extends Scene
-{
-    constructor ()
-    {
+//obstacles
+let cactus;
+
+export class Game extends Scene {
+    constructor() {
         super('Game');
     }
 
-    create ()
-    {
+    create() {
         playerHealth = {
             health5: this.add.image(200, 600, '5-heart').setAlpha(0).setScale(1.5),
             health4: this.add.image(200, 600, '4-heart').setAlpha(0).setScale(1.5),
@@ -51,7 +51,7 @@ export class Game extends Scene
                 playerHealth.setHealth(playerHealth.currentHealth - 1);
             },
             heal: () => {
-                if ((playerHealth.currentHealth + 1) <  6) {
+                if ((playerHealth.currentHealth + 1) < 6) {
                     playerHealth.setHealth(playerHealth.currentHealth + 1);
                 }
             },
@@ -114,14 +114,14 @@ export class Game extends Scene
             }
         };
         //background
-        
+
         background1 = this.add.image(
             GLOBALS.VIEWPORT_WIDTH / 2,
             GLOBALS.VIEWPORT_HEIGHT / 2,
             'background'
         ).setDisplaySize(this.sys.canvas.width + 5, this.sys.canvas.height).setDepth(-2);
         background2 = this.add.image(
-            GLOBALS.VIEWPORT_WIDTH * (3/2),
+            GLOBALS.VIEWPORT_WIDTH * (3 / 2),
             GLOBALS.VIEWPORT_HEIGHT / 2,
             'background'
         ).setDisplaySize(this.sys.canvas.width + 8, this.sys.canvas.height).setDepth(-2).setFlipX(true);
@@ -135,7 +135,7 @@ export class Game extends Scene
             'clouds4'
         ).setDepth(-2).setScale(tileScale)
         clouds4b = this.add.image(
-            GLOBALS.VIEWPORT_WIDTH * (3/2),
+            GLOBALS.VIEWPORT_WIDTH * (3 / 2),
             GLOBALS.VIEWPORT_HEIGHT / 1.9,
             'clouds4'
         ).setDepth(-2).setScale(tileScale)
@@ -146,7 +146,7 @@ export class Game extends Scene
             'clouds3'
         ).setDepth(-2).setScale(tileScale)
         clouds3b = this.add.image(
-            GLOBALS.VIEWPORT_WIDTH * (3/2),
+            GLOBALS.VIEWPORT_WIDTH * (3 / 2),
             GLOBALS.VIEWPORT_HEIGHT / 2.4,
             'clouds3'
         ).setDepth(-2).setScale(tileScale)
@@ -157,7 +157,7 @@ export class Game extends Scene
             'clouds2'
         ).setDepth(-2).setScale(tileScale)
         clouds2b = this.add.image(
-            GLOBALS.VIEWPORT_WIDTH * (3/2),
+            GLOBALS.VIEWPORT_WIDTH * (3 / 2),
             GLOBALS.VIEWPORT_HEIGHT / 3.5,
             'clouds2'
         ).setDepth(-2).setScale(tileScale)
@@ -168,7 +168,7 @@ export class Game extends Scene
             'clouds1'
         ).setDepth(-2).setScale(tileScale)
         clouds1b = this.add.image(
-            GLOBALS.VIEWPORT_WIDTH * (3/2),
+            GLOBALS.VIEWPORT_WIDTH * (3 / 2),
             GLOBALS.VIEWPORT_HEIGHT / 8,
             'clouds1'
         ).setDepth(-2).setScale(tileScale)
@@ -180,24 +180,24 @@ export class Game extends Scene
         dunesTile3 = this.add.tileSprite(
             0,
             GLOBALS.VIEWPORT_HEIGHT - (tileHeight * tileScale * tileNum),
-            GLOBALS.VIEWPORT_WIDTH ,
+            GLOBALS.VIEWPORT_WIDTH,
             tileHeight,
             'dunesTileTop'
-        ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
+        ).setScale(tileScale).setOrigin(.5, 1).setDepth(-2)
         dunesTile2 = this.add.tileSprite(
             0,
             GLOBALS.VIEWPORT_HEIGHT - (tileHeight * tileScale * tileNum),
-            GLOBALS.VIEWPORT_WIDTH ,
+            GLOBALS.VIEWPORT_WIDTH,
             tileHeight,
             'dunesTileMid'
-        ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
+        ).setScale(tileScale).setOrigin(.5, 1).setDepth(-2)
         dunesTile1 = this.add.tileSprite(
             0,
             GLOBALS.VIEWPORT_HEIGHT - (tileHeight * tileScale * tileNum),
             GLOBALS.VIEWPORT_WIDTH,
             tileHeight,
             'dunesTileBottom'
-        ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
+        ).setScale(tileScale).setOrigin(.5, 1).setDepth(-2)
 
         //sand floor
         var tileHeight = 32
@@ -209,7 +209,7 @@ export class Game extends Scene
             GLOBALS.VIEWPORT_WIDTH,
             tileHeight * tileNum,
             'sandTile'
-        ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
+        ).setScale(tileScale).setOrigin(.5, 1).setDepth(-2)
 
         sandTileTop1 = this.add.tileSprite(
             0,
@@ -217,13 +217,13 @@ export class Game extends Scene
             GLOBALS.VIEWPORT_WIDTH,
             tileHeight,
             'sandTileTop'
-        ).setScale(tileScale).setOrigin(.5,1).setDepth(-2)
+        ).setScale(tileScale).setOrigin(.5, 1).setDepth(-2)
 
 
         player = this.physics.add.sprite(200, 500, 'tumbleweed').setScale(4).refreshBody();
 
         shadow = this.add.image(200, 650, 'shadow').setAlpha(0.1).setDepth(-1).setScale(0.3);
-        
+
         platforms = this.physics.add.staticGroup();
 
         // this is the invisible floor that the tumbleweed falls on
@@ -245,10 +245,10 @@ export class Game extends Scene
         this.spin(player, 0.05);
 
         this.movingBackground(background1, .1); this.movingBackground(background2, .1);
-        this.movingBackground(clouds1a, 1);     this.movingBackground(clouds1b, 1);
-        this.movingBackground(clouds2a, .5);    this.movingBackground(clouds2b, .5);
-        this.movingBackground(clouds3a, .2);    this.movingBackground(clouds3b, .2);
-        this.movingBackground(clouds4a, .1);    this.movingBackground(clouds4b, .1);
+        this.movingBackground(clouds1a, 1); this.movingBackground(clouds1b, 1);
+        this.movingBackground(clouds2a, .5); this.movingBackground(clouds2b, .5);
+        this.movingBackground(clouds3a, .2); this.movingBackground(clouds3b, .2);
+        this.movingBackground(clouds4a, .1); this.movingBackground(clouds4b, .1);
         this.movingBackground(sandTile1, 4);
         this.movingBackground(sandTileTop1, 4);
         this.movingBackground(dunesTile1, 1);
@@ -268,7 +268,7 @@ export class Game extends Scene
         if (background.x > GLOBALS.VIEWPORT_WIDTH / -2) {
             background.setX(background.x - speed);
         } else {
-            background.setX(GLOBALS.VIEWPORT_WIDTH * (3/2));
+            background.setX(GLOBALS.VIEWPORT_WIDTH * (3 / 2));
         }
     }
 
