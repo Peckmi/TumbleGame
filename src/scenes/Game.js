@@ -26,6 +26,8 @@ let playerHealth;
 
 //obstacles
 let cactus;
+var collide = true;
+var collision = 0;
 
 export class Game extends Scene {
     constructor() {
@@ -219,6 +221,11 @@ export class Game extends Scene {
             'sandTileTop'
         ).setScale(tileScale).setOrigin(.5, 1).setDepth(-2)
 
+        //cactus obstacle
+        cactus = this.physics.add.sprite(
+            GLOBALS.VIEWPORT_WIDTH, 600, 'cactus1'
+        ).setScale(4)
+
 
         player = this.physics.add.sprite(200, 500, 'tumbleweed').setScale(4).refreshBody();
 
@@ -230,6 +237,7 @@ export class Game extends Scene {
         ground = platforms.create(GLOBALS.VIEWPORT_WIDTH / 2, 650, 'empty').setScale(GLOBALS.VIEWPORT_WIDTH / 8, 1).refreshBody().setAlpha(0);
 
         this.physics.add.collider(player, platforms);
+        this.physics.add.collider(cactus, platforms);
     }
 
     update() {
@@ -255,6 +263,8 @@ export class Game extends Scene {
         this.movingBackground(dunesTile2, .5);
         this.movingBackground(dunesTile3, .2);
 
+        this.movingBackground(cactus, 4);
+
         shadow.setScale(0.3 + (DISTANCE_FROM_GROUND / 2800));
         shadow.setAlpha(0.1 - (DISTANCE_FROM_GROUND / 4000));
         playerHealth.alignAll();
@@ -279,4 +289,5 @@ export class Game extends Scene {
             }
         });
     }
+
 }
