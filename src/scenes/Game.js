@@ -21,13 +21,14 @@ let clouds3a;
 let clouds3b;
 let clouds4a;
 let clouds4b;
+let cactus;
+let deadBush;
 
 let playerHealth;
 
-//obstacles
-let cactus;
-var collide = true;
-var collision = 0;
+var collisionBad;
+var collisionGood;
+
 
 export class Game extends Scene {
     constructor() {
@@ -62,7 +63,7 @@ export class Game extends Scene {
                 let newScale;
                 switch (healthNum) {
                     case 5:
-                        newScale = 0.4;
+                        newScale = 6;
                         playerHealth.health5.setAlpha(1);
                         playerHealth.health4.setAlpha(0);
                         playerHealth.health3.setAlpha(0);
@@ -72,7 +73,7 @@ export class Game extends Scene {
                         player.setScale(newScale).refreshBody();
                         break;
                     case 4:
-                        newScale = 0.35;
+                        newScale = 5;
                         playerHealth.health5.setAlpha(0);
                         playerHealth.health4.setAlpha(1);
                         playerHealth.health3.setAlpha(0);
@@ -82,7 +83,7 @@ export class Game extends Scene {
                         player.setScale(newScale).refreshBody();
                         break;
                     case 3:
-                        newScale = 0.3;
+                        newScale = 4;
                         playerHealth.health5.setAlpha(0);
                         playerHealth.health4.setAlpha(0);
                         playerHealth.health3.setAlpha(1);
@@ -92,7 +93,7 @@ export class Game extends Scene {
                         player.setScale(newScale).refreshBody();
                         break;
                     case 2:
-                        newScale = 0.25;
+                        newScale = 3;
                         playerHealth.health4.setAlpha(0);
                         playerHealth.health5.setAlpha(0);
                         playerHealth.health3.setAlpha(0);
@@ -102,7 +103,7 @@ export class Game extends Scene {
                         player.setScale(newScale).refreshBody();
                         break;
                     case 1:
-                        newScale = 0.2;
+                        newScale = 2;
                         playerHealth.health5.setAlpha(0);
                         playerHealth.health4.setAlpha(0);
                         playerHealth.health3.setAlpha(0);
@@ -222,9 +223,8 @@ export class Game extends Scene {
         ).setScale(tileScale).setOrigin(.5, 1).setDepth(-2)
 
         //cactus obstacle
-        //cactus = this.physics.add.sprite(GLOBALS.VIEWPORT_WIDTH, 600, 'cactus1').setScale(4)
         cactus = this.physics.add.group();
-        this.generateObstacles(cactus);
+        this.generateCactus();
 
 
         player = this.physics.add.sprite(200, 500, 'tumbleweed').setScale(4).refreshBody();
@@ -267,10 +267,8 @@ export class Game extends Scene {
         shadow.setAlpha(0.1 - (DISTANCE_FROM_GROUND / 4000));
         playerHealth.alignAll();
 
-        cactus.setVelocityX(-100);
-
         //check for collisions
-        //this.physics.overlap(player, cactus, collisionHandler, null, this);
+        collisionBad = this.physics.overlap(player, cactus, this.collisionHandler, null, this);
     }
 
     spin(object, amount) {
@@ -293,18 +291,20 @@ export class Game extends Scene {
         });
     }
 
-    generateObstacles(obstacles) {
-        var obstacleY = Phaser.Math.Between(100, 500);
-        var obstacle = obstacles.create(800, obstacleY, 'obstacle');
+    generateCactus() {
+        var obstacle = cactus.create(GLOBALS.VIEWPORT_WIDTH + 100, 630, 'cactus');
 
-        obstacle.setVelocityX(-100);
+        obstacle.setVelocityX(-1400);
 
-        this.time.delayedCall(Phaser.Math.Between(1000, 3000), this.generateObstacles, [], this);
+        this.time.delayedCall(Phaser.Math.Between(1000, 3000), this.generateCactus, [], this);
     }
 
     collisionHandler() {
-        //reduce or add player health
-        //if player collides with cactus = health - 1
-        //if player collides with dry bush thing = health + 1
+        if (collisionBad) {
+            playerHealth.hurt();
+        }
+        if (collisionGood) {
+            playerHealth.heal();
+        }
     }
 }
