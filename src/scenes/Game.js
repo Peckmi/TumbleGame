@@ -33,6 +33,8 @@ var collisionBad;
 var collisionGood;
 var collsionFence;
 
+var score;
+
 
 export class Game extends Scene {
     constructor() {
@@ -230,7 +232,7 @@ export class Game extends Scene {
 
         // obstacles
         cactus = this.physics.add.group();
-        //this.generateCactus();
+        this.generateCactus();
 
         deadBush = this.physics.add.group();
         this.generateBush();
@@ -257,6 +259,12 @@ export class Game extends Scene {
         this.physics.add.collider(cactus, platforms);
         this.physics.add.collider(deadBush, platforms);
         this.physics.add.collider(fence, fencePlatform);
+
+        //----------------------------------------
+
+        this.score = 0;
+        this.scoreText = this.add.text(16, 16, 'Score:0', { fontSize: '32px', fill: '#fff' });
+        this.time.addEvent({ delay: 100, callback: this.updateScore, callbackScope: this, loop: true });
     }
 
     update() {
@@ -344,11 +352,14 @@ export class Game extends Scene {
             playerHealth.heal();
         }
 
-        if (!collsionFence) {
-            player.setPosition(200, 580);
-        } else {
-            player.setPosition(fence.x, 580);
+        if (collsionFence) {
+            //player.setPosition(fence.x, 580);
             playerHealth.hurt();
         }
+    }
+
+    updateScore() {
+        this.score++;
+        this.scoreText.setText('Score: ' + this.score);
     }
 }
