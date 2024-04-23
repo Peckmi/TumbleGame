@@ -226,6 +226,8 @@ export class Game extends Scene {
         cactus = this.physics.add.group();
         this.generateCactus();
 
+        deadBush = this.physics.add.group();
+        this.generateBush();
 
         player = this.physics.add.sprite(200, 500, 'tumbleweed').setScale(4).refreshBody();
 
@@ -238,6 +240,7 @@ export class Game extends Scene {
 
         this.physics.add.collider(player, platforms);
         this.physics.add.collider(cactus, platforms);
+        this.physics.add.collider(deadBush, platforms);
     }
 
     update() {
@@ -269,6 +272,7 @@ export class Game extends Scene {
 
         //check for collisions
         collisionBad = this.physics.overlap(player, cactus, this.collisionHandler, null, this);
+        collisionGood = this.physics.overlap(player, deadBush, this.collisionHandler, null, this);
     }
 
     spin(object, amount) {
@@ -297,6 +301,14 @@ export class Game extends Scene {
         obstacle.setVelocityX(-1400);
 
         this.time.delayedCall(Phaser.Math.Between(1000, 3000), this.generateCactus, [], this);
+    }
+
+    generateBush() {
+        var obstacle = deadBush.create(GLOBALS.VIEWPORT_WIDTH + 100, 600, 'deadBush').setScale(5);
+
+        obstacle.setVelocityX(-1400);
+
+        this.time.delayedCall(Phaser.Math.Between(1000, 3000), this.generateBush, [], this);
     }
 
     collisionHandler() {
