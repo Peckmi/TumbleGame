@@ -2,7 +2,9 @@ import { Scene } from 'phaser';
 import { GLOBALS } from '../main';
 
 let platforms;
+let fencePlatform;
 let ground;
+let fenceGround;
 let player;
 let isPlayerGrounded;
 let shadow;
@@ -29,6 +31,7 @@ let playerHealth;
 
 var collisionBad;
 var collisionGood;
+var collsionFence;
 
 
 export class Game extends Scene {
@@ -118,6 +121,8 @@ export class Game extends Scene {
             }
         };
         //background
+
+        this.physics.world.gravity.y = 1500;
 
         background1 = this.add.image(
             GLOBALS.VIEWPORT_WIDTH / 2,
@@ -225,30 +230,33 @@ export class Game extends Scene {
 
         // obstacles
         cactus = this.physics.add.group();
-        this.generateCactus();
+        //this.generateCactus();
 
         deadBush = this.physics.add.group();
         this.generateBush();
 
-        //fence = this.physics.add.group();
-        //this.generateFence();
+        fence = this.physics.add.group();
+        this.generateFence();
 
         //----------------------------------------
 
-        player = this.physics.add.sprite(200, 500, 'tumbleweed').setScale(4).refreshBody();
+        player = this.physics.add.sprite(200, 580, 'tumbleweed').setScale(4).refreshBody();
 
         shadow = this.add.image(200, 650, 'shadow').setAlpha(0.1).setDepth(-1).setScale(0.3);
 
         platforms = this.physics.add.staticGroup();
+        fencePlatform = this.physics.add.staticGroup();
 
         // this is the invisible floor that the tumbleweed falls on
-        ground = platforms.create(GLOBALS.VIEWPORT_WIDTH / 2, 650, 'empty').setScale(GLOBALS.VIEWPORT_WIDTH / 8, 1).refreshBody().setAlpha(0);
+        ground = platforms.create(GLOBALS.VIEWPORT_WIDTH / 2, 650, 'empty').setScale(GLOBALS.VIEWPORT_WIDTH, 1).refreshBody().setAlpha(0);
+
+        fenceGround = fencePlatform.create(GLOBALS.VIEWPORT_WIDTH / 2, GLOBALS.VIEWPORT_HEIGHT, 'empty').setScale(GLOBALS.VIEWPORT_WIDTH, 1).refreshBody().setAlpha(0);
 
         this.physics.add.collider(player, platforms);
 
         this.physics.add.collider(cactus, platforms);
         this.physics.add.collider(deadBush, platforms);
-        //this.physics.add.collider(fence, platforms);
+        this.physics.add.collider(fence, fencePlatform);
     }
 
     update() {
@@ -281,6 +289,8 @@ export class Game extends Scene {
         //check for collisions
         collisionBad = this.physics.overlap(player, cactus, this.collisionHandler, null, this);
         collisionGood = this.physics.overlap(player, deadBush, this.collisionHandler, null, this);
+
+        collsionFence = this.physics.overlap(player, fence, this.collisionHandler, null, this);
     }
 
     spin(object, amount) {
@@ -298,33 +308,32 @@ export class Game extends Scene {
     playerController() {
         this.input.keyboard.once('keydown-SPACE', () => {
             if (isPlayerGrounded) {
-                player.body.setVelocityY(-600);
+                player.body.setVelocityY(-850);
             }
         });
     }
 
     generateCactus() {
-        var cactuses = cactus.create(GLOBALS.VIEWPORT_WIDTH + 50, 610, 'cactus').setScale(4); //i'm setting this scale to 5 cause it's hard to see
+        var cacti = cactus.create(GLOBALS.VIEWPORT_WIDTH + 50, 580, 'cactus').setScale(3); //i'm setting this scale to 5 cause it's hard to see
 
-        cactuses.setVelocityX(-1400);
+        cacti.setVelocityX(-1400);
 
         this.time.delayedCall(Phaser.Math.Between(1000, 3000), this.generateCactus, [], this);
     }
 
     generateBush() {
-        var obstacle = deadBush.create(GLOBALS.VIEWPORT_WIDTH + 50, 610, 'deadBush').setScale(5); //i'm setting this scale to 5 cause it's hard to see
+        var bushes = deadBush.create(GLOBALS.VIEWPORT_WIDTH + 50, 610, 'deadBush').setScale(5); //i'm setting this scale to 5 cause it's hard to see
 
-        obstacle.setVelocityX(-1400);
+        bushes.setVelocityX(-1400);
 
         this.time.delayedCall(Phaser.Math.Between(3000, 8000), this.generateBush, [], this);
     }
 
     generateFence() {
-        var obstacle = fence.create(GLOBALS.VIEWPORT_WIDTH + 50, 600, 'fence').setScale(4);
+        var fences = fence.create(GLOBALS.VIEWPORT_WIDTH + 100, 620, 'fence').setScale(3.5);
+        fences.setVelocityX(-1400);
 
-        obstacle.setVelocityX(-1400);
-
-        this.time.delayedCall(Phaser.Math.Between(1000, 2000), this.generateFence, [], this);
+        this.time.delayedCall(Phaser.Math.Between(4000, 9000), this.generateFence, [], this);
     }
 
     collisionHandler() {
@@ -333,6 +342,13 @@ export class Game extends Scene {
         }
         if (collisionGood) {
             playerHealth.heal();
+        }
+
+        if (!collsionFence) {
+            player.setPosition(200, 580);
+        } else {
+            player.setPosition(fence.x, 580);
+            playerHealth.hurt();
         }
     }
 }
