@@ -279,6 +279,7 @@ export class Game extends Scene {
         this.playerController();
         this.spin(player, 0.05);
 
+        //if you change the background speed, double it or half it so the looping lines up well
         this.movingBackground(background1, .1); this.movingBackground(background2, .1);
         this.movingBackground(clouds1a, 1); this.movingBackground(clouds1b, 1);
         this.movingBackground(clouds2a, .5); this.movingBackground(clouds2b, .5);
@@ -324,7 +325,7 @@ export class Game extends Scene {
     generateCactus() {
         var cacti = cactus.create(GLOBALS.VIEWPORT_WIDTH + 50, 580, 'cactus').setScale(3); //i'm setting this scale to 5 cause it's hard to see
 
-        cacti.setVelocityX(-1400);
+        cacti.setVelocityX(-670);
 
         this.time.delayedCall(Phaser.Math.Between(1000, 3000), this.generateCactus, [], this);
     }
@@ -332,14 +333,14 @@ export class Game extends Scene {
     generateBush() {
         var bushes = deadBush.create(GLOBALS.VIEWPORT_WIDTH + 50, 610, 'deadBush').setScale(5); //i'm setting this scale to 5 cause it's hard to see
 
-        bushes.setVelocityX(-1400);
+        bushes.setVelocityX(-670);
 
         this.time.delayedCall(Phaser.Math.Between(3000, 8000), this.generateBush, [], this);
     }
 
     generateFence() {
         var fences = fence.create(GLOBALS.VIEWPORT_WIDTH + 100, 620, 'fence').setScale(3.5);
-        fences.setVelocityX(-1400);
+        fences.setVelocityX(-670);
 
         this.time.delayedCall(Phaser.Math.Between(4000, 9000), this.generateFence, [], this);
     }
