@@ -23,6 +23,7 @@ let clouds4a;
 let clouds4b;
 let cactus;
 let deadBush;
+let fence;
 
 let playerHealth;
 
@@ -222,12 +223,17 @@ export class Game extends Scene {
             'sandTileTop'
         ).setScale(tileScale).setOrigin(.5, 1).setDepth(-2)
 
-        //cactus obstacle
+        // obstacles
         cactus = this.physics.add.group();
         this.generateCactus();
 
         deadBush = this.physics.add.group();
         this.generateBush();
+
+        //fence = this.physics.add.group();
+        //this.generateFence();
+
+        //----------------------------------------
 
         player = this.physics.add.sprite(200, 500, 'tumbleweed').setScale(4).refreshBody();
 
@@ -239,8 +245,10 @@ export class Game extends Scene {
         ground = platforms.create(GLOBALS.VIEWPORT_WIDTH / 2, 650, 'empty').setScale(GLOBALS.VIEWPORT_WIDTH / 8, 1).refreshBody().setAlpha(0);
 
         this.physics.add.collider(player, platforms);
+
         this.physics.add.collider(cactus, platforms);
         this.physics.add.collider(deadBush, platforms);
+        //this.physics.add.collider(fence, platforms);
     }
 
     update() {
@@ -296,19 +304,27 @@ export class Game extends Scene {
     }
 
     generateCactus() {
-        var obstacle = cactus.create(GLOBALS.VIEWPORT_WIDTH + 100, 630, 'cactus');
+        var cactuses = cactus.create(GLOBALS.VIEWPORT_WIDTH + 50, 610, 'cactus').setScale(4); //i'm setting this scale to 5 cause it's hard to see
 
-        obstacle.setVelocityX(-1400);
+        cactuses.setVelocityX(-1400);
 
         this.time.delayedCall(Phaser.Math.Between(1000, 3000), this.generateCactus, [], this);
     }
 
     generateBush() {
-        var obstacle = deadBush.create(GLOBALS.VIEWPORT_WIDTH + 100, 600, 'deadBush').setScale(5);
+        var obstacle = deadBush.create(GLOBALS.VIEWPORT_WIDTH + 50, 610, 'deadBush').setScale(5); //i'm setting this scale to 5 cause it's hard to see
 
         obstacle.setVelocityX(-1400);
 
-        this.time.delayedCall(Phaser.Math.Between(1000, 3000), this.generateBush, [], this);
+        this.time.delayedCall(Phaser.Math.Between(3000, 8000), this.generateBush, [], this);
+    }
+
+    generateFence() {
+        var obstacle = fence.create(GLOBALS.VIEWPORT_WIDTH + 50, 600, 'fence').setScale(4);
+
+        obstacle.setVelocityX(-1400);
+
+        this.time.delayedCall(Phaser.Math.Between(1000, 2000), this.generateFence, [], this);
     }
 
     collisionHandler() {
