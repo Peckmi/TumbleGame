@@ -4,7 +4,6 @@ import { GLOBALS } from '../main';
 let platforms;
 let fencePlatform;
 let ground;
-let fenceGround;
 let player;
 let isPlayerGrounded;
 let shadow;
@@ -129,7 +128,7 @@ export class Game extends Scene {
                         player.setScale(newScale).refreshBody();
                         break;
                     case 0:
-                        this.scene.start('GameOver');
+                        this.scene.start('GameOver', { score: this.score });
                 }
             }
         };
@@ -246,10 +245,10 @@ export class Game extends Scene {
         this.time.delayedCall(Phaser.Math.Between(1000, 3000), this.generateCactus, [], this);
 
         deadBush = this.physics.add.group();
-        this.time.delayedCall(Phaser.Math.Between(1000, 8000), this.generateBush, [], this);
+        this.time.delayedCall(Phaser.Math.Between(3000, 8000), this.generateBush, [], this);
 
         fence = this.physics.add.group();
-        this.time.delayedCall(Phaser.Math.Between(1000, 8000), this.generateFence, [], this);
+        this.time.delayedCall(Phaser.Math.Between(8000, 15000), this.generateFence, [], this);
 
         //----------------------------------------
 
@@ -368,7 +367,7 @@ export class Game extends Scene {
         
         obstacleArray.push(fences);
 
-        this.time.delayedCall(Phaser.Math.Between(4000, 9000), this.generateFence, [], this);
+        this.time.delayedCall(Phaser.Math.Between(8000, 15000), this.generateFence, [], this);
     }
 
     collisionHandler() {
@@ -380,8 +379,7 @@ export class Game extends Scene {
         }
 
         if (collsionFence) {
-            //player.setPosition(fence.x, 580);
-            playerHealth.hurt();
+            playerHealth.setHealth(0);
         }
     }
 
