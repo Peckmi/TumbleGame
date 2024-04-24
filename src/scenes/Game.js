@@ -33,6 +33,8 @@ var collisionGood;
 var collsionFence;
 let obstacleArray = [];
 
+let foregroundMoveSpeed;
+
 export class Game extends Scene {
     constructor() {
         super('Game');
@@ -50,7 +52,7 @@ export class Game extends Scene {
                 playerHealth.canChangeHealth = false;
                 setTimeout(() => {
                     playerHealth.canChangeHealth = true;
-                }, 1000);
+                }, 200);
             },
             alignAll: () => {
                 playerHealth.health5.y = player.body.position.y - 20;
@@ -262,8 +264,6 @@ export class Game extends Scene {
         // this is the invisible floor that the tumbleweed falls on
         ground = platforms.create(GLOBALS.VIEWPORT_WIDTH / 2, 650, 'empty').setScale(GLOBALS.VIEWPORT_WIDTH, 1).refreshBody().setAlpha(0);
 
-        fenceGround = fencePlatform.create(GLOBALS.VIEWPORT_WIDTH / 2, GLOBALS.VIEWPORT_HEIGHT, 'empty').setScale(GLOBALS.VIEWPORT_WIDTH, 1).refreshBody().setAlpha(0);
-
         this.physics.add.collider(player, platforms);
 
         this.physics.add.collider(cactus, platforms);
@@ -275,11 +275,12 @@ export class Game extends Scene {
         this.score = 0;
         this.scoreText = this.add.text(16, 16, 'Score:0', { fontSize: '32px', fill: '#fff' });
         this.time.addEvent({ delay: 100, callback: this.updateScore, callbackScope: this, loop: true });
+
+        foregroundMoveSpeed = 10;
+        this.time.addEvent({ delay: 1000, callback: () => { foregroundMoveSpeed += 0.1 }, callbackScope: this, loop: true });
     }
 
     update() {
-        const FOREGROUND_MOVE_SPEED = 10;
-
         const DISTANCE_FROM_GROUND = (Math.abs(ground.body.position.y) - Math.abs(player.body.position.y)) - (player.displayWidth);
 
         if (DISTANCE_FROM_GROUND === 0) {
@@ -289,7 +290,7 @@ export class Game extends Scene {
         }
 
         this.playerController();    
-        this.spin(player, 0.1);
+        this.spin(player, 0.01 * foregroundMoveSpeed);
 
         //if you change the background speed, double it or half it so the looping lines up well
         this.moveBackground(background1, .1); this.moveBackground(background2, .1);
@@ -297,13 +298,13 @@ export class Game extends Scene {
         this.moveBackground(clouds2a, .5); this.moveBackground(clouds2b, .5);
         this.moveBackground(clouds3a, .2); this.moveBackground(clouds3b, .2);
         this.moveBackground(clouds4a, .1); this.moveBackground(clouds4b, .1);
-        this.moveBackground(sandTile1, FOREGROUND_MOVE_SPEED);
-        this.moveBackground(sandTileTop1, FOREGROUND_MOVE_SPEED);
+        this.moveBackground(sandTile1, foregroundMoveSpeed);
+        this.moveBackground(sandTileTop1, foregroundMoveSpeed);
         this.moveBackground(dunesTile1, 1);
         this.moveBackground(dunesTile2, .5);
         this.moveBackground(dunesTile3, .2);
 
-        this.moveObstacles(obstacleArray, FOREGROUND_MOVE_SPEED);
+        this.moveObstacles(obstacleArray, foregroundMoveSpeed);
 
         shadow.setScale(0.3 + (DISTANCE_FROM_GROUND / 2800));
         shadow.setAlpha(0.1 - (DISTANCE_FROM_GROUND / 4000));
