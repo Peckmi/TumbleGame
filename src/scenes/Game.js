@@ -25,6 +25,7 @@ let clouds4b;
 let cactus;
 let deadBush;
 let fence;
+let fenceGround
 
 let playerHealth;
 
@@ -52,7 +53,7 @@ export class Game extends Scene {
                 playerHealth.canChangeHealth = false;
                 setTimeout(() => {
                     playerHealth.canChangeHealth = true;
-                }, 200);
+                }, 500);
             },
             alignAll: () => {
                 playerHealth.health5.y = player.body.position.y - 20;
@@ -263,6 +264,8 @@ export class Game extends Scene {
 
         // this is the invisible floor that the tumbleweed falls on
         ground = platforms.create(GLOBALS.VIEWPORT_WIDTH / 2, 650, 'empty').setScale(GLOBALS.VIEWPORT_WIDTH, 1).refreshBody().setAlpha(0);
+
+        fenceGround = fencePlatform.create(GLOBALS.VIEWPORT_WIDTH / 2, GLOBALS.VIEWPORT_HEIGHT, 'empty').setScale(GLOBALS.VIEWPORT_WIDTH, 1).refreshBody().setAlpha(0);
 
         this.physics.add.collider(player, platforms);
 
