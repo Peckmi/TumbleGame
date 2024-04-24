@@ -32,9 +32,7 @@ let playerHealth;
 var collisionBad;
 var collisionGood;
 var collsionFence;
-
-var score;
-
+let obstacleArray = [];
 
 export class Game extends Scene {
     constructor() {
@@ -48,6 +46,13 @@ export class Game extends Scene {
             health3: this.add.image(200, 600, '3-heart').setAlpha(1).setScale(1.5),
             health2: this.add.image(200, 600, '2-heart').setAlpha(0).setScale(1.5),
             health1: this.add.image(200, 600, '1-heart').setAlpha(0).setScale(1.5),
+            canChangeHealth: true,
+            healthChanged: () => {
+                playerHealth.canChangeHealth = false;
+                setTimeout(() => {
+                    playerHealth.canChangeHealth = true;
+                }, 1000);
+            },
             alignAll: () => {
                 playerHealth.health5.y = player.body.position.y - 20;
                 playerHealth.health4.y = player.body.position.y - 20;
@@ -65,11 +70,17 @@ export class Game extends Scene {
                 }
             },
             setHealth: (healthNum) => {
+                if (!playerHealth.canChangeHealth) {
+                    return;
+                }
+
+                playerHealth.healthChanged();
+
                 playerHealth.currentHealth = healthNum;
                 let newScale;
                 switch (healthNum) {
                     case 5:
-                        newScale = 6;
+                        newScale = 4.3;
                         playerHealth.health5.setAlpha(1);
                         playerHealth.health4.setAlpha(0);
                         playerHealth.health3.setAlpha(0);
@@ -79,7 +90,7 @@ export class Game extends Scene {
                         player.setScale(newScale).refreshBody();
                         break;
                     case 4:
-                        newScale = 5;
+                        newScale = 4;
                         playerHealth.health5.setAlpha(0);
                         playerHealth.health4.setAlpha(1);
                         playerHealth.health3.setAlpha(0);
@@ -89,7 +100,7 @@ export class Game extends Scene {
                         player.setScale(newScale).refreshBody();
                         break;
                     case 3:
-                        newScale = 4;
+                        newScale = 3.5;
                         playerHealth.health5.setAlpha(0);
                         playerHealth.health4.setAlpha(0);
                         playerHealth.health3.setAlpha(1);
@@ -109,7 +120,7 @@ export class Game extends Scene {
                         player.setScale(newScale).refreshBody();
                         break;
                     case 1:
-                        newScale = 2;
+                        newScale = 2.5;
                         playerHealth.health5.setAlpha(0);
                         playerHealth.health4.setAlpha(0);
                         playerHealth.health3.setAlpha(0);
@@ -232,17 +243,17 @@ export class Game extends Scene {
 
         // obstacles
         cactus = this.physics.add.group();
-        this.generateCactus();
+        this.time.delayedCall(Phaser.Math.Between(1000, 3000), this.generateCactus, [], this);
 
         deadBush = this.physics.add.group();
-        this.generateBush();
+        this.time.delayedCall(Phaser.Math.Between(1000, 8000), this.generateBush, [], this);
 
         fence = this.physics.add.group();
-        this.generateFence();
+        this.time.delayedCall(Phaser.Math.Between(1000, 8000), this.generateFence, [], this);
 
         //----------------------------------------
 
-        player = this.physics.add.sprite(200, 580, 'tumbleweed').setScale(4).refreshBody();
+        player = this.physics.add.sprite(200, 580, 'tumbleweed').setScale(3.5).refreshBody();
 
         shadow = this.add.image(200, 650, 'shadow').setAlpha(0.1).setDepth(-1).setScale(0.3);
 
@@ -268,6 +279,8 @@ export class Game extends Scene {
     }
 
     update() {
+        const FOREGROUND_MOVE_SPEED = 10;
+
         const DISTANCE_FROM_GROUND = (Math.abs(ground.body.position.y) - Math.abs(player.body.position.y)) - (player.displayWidth);
 
         if (DISTANCE_FROM_GROUND === 0) {
@@ -276,20 +289,22 @@ export class Game extends Scene {
             isPlayerGrounded = false;
         }
 
-        this.playerController();
-        this.spin(player, 0.05);
+        this.playerController();    
+        this.spin(player, 0.1);
 
         //if you change the background speed, double it or half it so the looping lines up well
-        this.movingBackground(background1, .1); this.movingBackground(background2, .1);
-        this.movingBackground(clouds1a, 1); this.movingBackground(clouds1b, 1);
-        this.movingBackground(clouds2a, .5); this.movingBackground(clouds2b, .5);
-        this.movingBackground(clouds3a, .2); this.movingBackground(clouds3b, .2);
-        this.movingBackground(clouds4a, .1); this.movingBackground(clouds4b, .1);
-        this.movingBackground(sandTile1, 4);
-        this.movingBackground(sandTileTop1, 4);
-        this.movingBackground(dunesTile1, 1);
-        this.movingBackground(dunesTile2, .5);
-        this.movingBackground(dunesTile3, .2);
+        this.moveBackground(background1, .1); this.moveBackground(background2, .1);
+        this.moveBackground(clouds1a, 1); this.moveBackground(clouds1b, 1);
+        this.moveBackground(clouds2a, .5); this.moveBackground(clouds2b, .5);
+        this.moveBackground(clouds3a, .2); this.moveBackground(clouds3b, .2);
+        this.moveBackground(clouds4a, .1); this.moveBackground(clouds4b, .1);
+        this.moveBackground(sandTile1, FOREGROUND_MOVE_SPEED);
+        this.moveBackground(sandTileTop1, FOREGROUND_MOVE_SPEED);
+        this.moveBackground(dunesTile1, 1);
+        this.moveBackground(dunesTile2, .5);
+        this.moveBackground(dunesTile3, .2);
+
+        this.moveObstacles(obstacleArray, FOREGROUND_MOVE_SPEED);
 
         shadow.setScale(0.3 + (DISTANCE_FROM_GROUND / 2800));
         shadow.setAlpha(0.1 - (DISTANCE_FROM_GROUND / 4000));
@@ -298,7 +313,6 @@ export class Game extends Scene {
         //check for collisions
         collisionBad = this.physics.overlap(player, cactus, this.collisionHandler, null, this);
         collisionGood = this.physics.overlap(player, deadBush, this.collisionHandler, null, this);
-
         collsionFence = this.physics.overlap(player, fence, this.collisionHandler, null, this);
     }
 
@@ -306,12 +320,23 @@ export class Game extends Scene {
         object.setRotation(object.rotation + amount);
     }
 
-    movingBackground(background, speed) {
+    moveBackground(background, speed) {
         if (background.x > GLOBALS.VIEWPORT_WIDTH / -2) {
             background.setX(background.x - speed);
         } else {
             background.setX(GLOBALS.VIEWPORT_WIDTH * (3 / 2));
         }
+    }
+
+    moveObstacles(obstacles, speed) {
+        obstacles.forEach(obstacle => {
+            if (obstacle.x > GLOBALS.VIEWPORT_WIDTH / -2) {
+                obstacle.setX(obstacle.x - speed);
+            } else {
+                obstacle.destroy(true);
+                obstacles.splice(obstacles.indexOf(obstacle), 1);
+            }
+        });
     }
 
     playerController() {
@@ -323,24 +348,25 @@ export class Game extends Scene {
     }
 
     generateCactus() {
-        var cacti = cactus.create(GLOBALS.VIEWPORT_WIDTH + 50, 580, 'cactus').setScale(3); //i'm setting this scale to 5 cause it's hard to see
+        var cacti = cactus.create(GLOBALS.VIEWPORT_WIDTH * (3/2), 580, 'cactus').setScale(3).refreshBody();
 
-        cacti.setVelocityX(-670);
+        obstacleArray.push(cacti);
 
         this.time.delayedCall(Phaser.Math.Between(1000, 3000), this.generateCactus, [], this);
     }
 
     generateBush() {
-        var bushes = deadBush.create(GLOBALS.VIEWPORT_WIDTH + 50, 610, 'deadBush').setScale(5); //i'm setting this scale to 5 cause it's hard to see
+        var bushes = deadBush.create(GLOBALS.VIEWPORT_WIDTH * (3/2), 610, 'deadBush').setScale(5).refreshBody();
 
-        bushes.setVelocityX(-670);
+        obstacleArray.push(bushes);
 
         this.time.delayedCall(Phaser.Math.Between(3000, 8000), this.generateBush, [], this);
     }
 
     generateFence() {
-        var fences = fence.create(GLOBALS.VIEWPORT_WIDTH + 100, 620, 'fence').setScale(3.5);
-        fences.setVelocityX(-670);
+        var fences = fence.create(GLOBALS.VIEWPORT_WIDTH * (3/2), 620, 'fence').setScale(3.5).refreshBody();
+        
+        obstacleArray.push(fences);
 
         this.time.delayedCall(Phaser.Math.Between(4000, 9000), this.generateFence, [], this);
     }
