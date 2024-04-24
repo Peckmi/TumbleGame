@@ -279,11 +279,11 @@ export class Game extends Scene {
         this.scoreText = this.add.text(16, 16, 'Score:0', { fontSize: '32px', fill: '#fff' });
         this.time.addEvent({ delay: 100, callback: this.updateScore, callbackScope: this, loop: true });
 
-        foregroundMoveSpeed = 10;
-        this.time.addEvent({ delay: 1000, callback: () => { foregroundMoveSpeed += 0.1 }, callbackScope: this, loop: true });
+        foregroundMoveSpeed = 0.7;
+        this.time.addEvent({ delay: 2000, callback: () => { if (foregroundMoveSpeed <= 1.2) foregroundMoveSpeed += 0.01 }, callbackScope: this, loop: true });
     }
 
-    update() {
+    update(_, delta) {
         const DISTANCE_FROM_GROUND = (Math.abs(ground.body.position.y) - Math.abs(player.body.position.y)) - (player.displayWidth);
 
         if (DISTANCE_FROM_GROUND === 0) {
@@ -293,21 +293,23 @@ export class Game extends Scene {
         }
 
         this.playerController();    
-        this.spin(player, 0.01 * foregroundMoveSpeed);
+        this.spin(player, 0.01 * foregroundMoveSpeed * delta);
+
+        const BG_SPEED_TWEAK_MULTIPLIER = 0.5;
 
         //if you change the background speed, double it or half it so the looping lines up well
-        this.moveBackground(background1, .1); this.moveBackground(background2, .1);
-        this.moveBackground(clouds1a, 1); this.moveBackground(clouds1b, 1);
-        this.moveBackground(clouds2a, .5); this.moveBackground(clouds2b, .5);
-        this.moveBackground(clouds3a, .2); this.moveBackground(clouds3b, .2);
-        this.moveBackground(clouds4a, .1); this.moveBackground(clouds4b, .1);
-        this.moveBackground(sandTile1, foregroundMoveSpeed);
-        this.moveBackground(sandTileTop1, foregroundMoveSpeed);
-        this.moveBackground(dunesTile1, 1);
-        this.moveBackground(dunesTile2, .5);
-        this.moveBackground(dunesTile3, .2);
+        this.moveBackground(background1, .025 * delta * BG_SPEED_TWEAK_MULTIPLIER); this.moveBackground(background2, .025 * delta * BG_SPEED_TWEAK_MULTIPLIER);
+        this.moveBackground(clouds1a, .25 * delta * BG_SPEED_TWEAK_MULTIPLIER); this.moveBackground(clouds1b, .25 * delta * BG_SPEED_TWEAK_MULTIPLIER);
+        this.moveBackground(clouds2a, .125 * delta * BG_SPEED_TWEAK_MULTIPLIER); this.moveBackground(clouds2b, .125 * delta * BG_SPEED_TWEAK_MULTIPLIER);
+        this.moveBackground(clouds3a, .05 * delta * BG_SPEED_TWEAK_MULTIPLIER); this.moveBackground(clouds3b, .05 * delta * BG_SPEED_TWEAK_MULTIPLIER);
+        this.moveBackground(clouds4a, .025 * delta * BG_SPEED_TWEAK_MULTIPLIER); this.moveBackground(clouds4b, .025 * delta * BG_SPEED_TWEAK_MULTIPLIER);
+        this.moveBackground(sandTile1, foregroundMoveSpeed * delta);
+        this.moveBackground(sandTileTop1, foregroundMoveSpeed * delta);
+        this.moveBackground(dunesTile1, .1 * delta * BG_SPEED_TWEAK_MULTIPLIER);
+        this.moveBackground(dunesTile2, .05 * delta * BG_SPEED_TWEAK_MULTIPLIER);
+        this.moveBackground(dunesTile3, .0125 * delta * BG_SPEED_TWEAK_MULTIPLIER);
 
-        this.moveObstacles(obstacleArray, foregroundMoveSpeed);
+        this.moveObstacles(obstacleArray, foregroundMoveSpeed * delta);
 
         shadow.setScale(0.3 + (DISTANCE_FROM_GROUND / 2800));
         shadow.setAlpha(0.1 - (DISTANCE_FROM_GROUND / 4000));
